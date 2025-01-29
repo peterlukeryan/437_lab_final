@@ -1,0 +1,48 @@
+body {
+    background: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-main);
+}
+
+#main-nav {
+    display: flex;
+    min-width: 258px;
+    width: 50%;
+    flex-direction: row;
+    align-items: center;
+    justify-content:space-around;
+    
+}
+
+a {
+    color: var(--color-link);
+}
+#heading-container {
+    background-color: var(--color-background-header);
+    color: var(--color-text-header);
+    padding: 1em;
+}
+#main-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    margin: 1em;
+    gap: 1.5em;
+}
+#about-me-conainer {
+    grid-column-start: 2;
+    grid-row-start: 1;
+}
+#contact-info {
+    grid-column-start: 1;
+    
+    grid-row-start: 2;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-header);
+}
+
+
+
+

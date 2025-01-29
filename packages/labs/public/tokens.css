@@ -1,0 +1,10 @@
+:root {
+    --color-background: #ffe4c4;
+    --color-background-header: rgb(250, 235, 215);
+    --color-text: rgb(25, 25, 112);
+    --color-text-header: rgb(85, 107, 47);
+    --color-link: rgb(178, 34, 34);
+    --font-main: 'Playfair Display';
+    --font-header: 'Josefin Sans';
+
+}
