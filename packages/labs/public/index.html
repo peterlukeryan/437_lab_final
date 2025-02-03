@@ -2,6 +2,10 @@
 <html>
 <head>
     <title>My First Web Page</title>
+    <!-- <script src="header.mjs" type="module"></script> -->
+    <!-- <script src="nav.mjs" type="module"></script> -->
+    <script src="my-header.mjs" type="module"></script>
+    <script src="my-nav.mjs" type="module"></script>
     <link href="styles.css" rel="stylesheet">
     <link href="tokens.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,18 +17,20 @@
 </head>
 <body>
     <!-- Hello, I'm a comment -->
-     <nav id="main-nav">
+     <my-nav></my-nav>
+     <!-- <nav id="main-nav">
         <h1>Peter Ryan</h1>
         <b><a href="projects.html">Projects</a></b>
    <b><a href="funfacts.html">Fun Facts</a></b>
-     </nav>
+     </nav> -->
      <div id="main-container">
-     <div id="heading-container">
+     <!-- <header id="heading-container">
     
     <h2>Cal Poly San Luis Obispo</h2>
     <p><b>"We're all in the gutter, but </b> <i>some of us are looking at the stars." </i> - Oscar Wilde</p>
     <img src="me.jpg" width="150px" height="200px" alt="Me"/>
-</div>
+     </header> -->
+    <my-header></my-header>
 <div id="about-me-container">
     <h3>About Me</h3>
     <hr>
