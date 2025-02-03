@@ -62,6 +62,7 @@ let markup = `
   <nav id="main-nav">
     <div id="upper-items">
       <h1>Peter Ryan</h1>
+      
       <button id="toggle-btn">Menu</button>
     </div>
     <div id="lower-items">
@@ -74,6 +75,7 @@ let markup = `
 const TEMPLATE = document.createElement("template");
 TEMPLATE.innerHTML = markup;
 
+
 class MyNav extends HTMLElement {
     constructor() {
         super();
@@ -82,20 +84,32 @@ class MyNav extends HTMLElement {
     }
 
     connectedCallback() {
-        // Ensure we do not append the template multiple times
+       
         if (!this.shadowRoot.hasChildNodes()) {
             this.shadowRoot.appendChild(TEMPLATE.content.cloneNode(true));
-
+            
             // Get elements inside shadow DOM
             const toggleButton = this.shadowRoot.getElementById("toggle-btn");
             const lowerDiv = this.shadowRoot.getElementById("lower-items");
-
+            const mainContainer = document.getElementById("main-container");
             toggleButton.addEventListener("click", () => {
+                console.log("clciked");
                 expanded = !expanded;
                 lowerDiv.style.display = expanded ? "flex" : "none";
+                console.log("style");
+                console.log(lowerDiv.style);
             });
+            mainContainer.addEventListener("click", (e) => {
+                if ( expanded){
+                    expanded = !expanded;
+                    lowerDiv.style.display = "none";
+                }
+            })
         }
+      
     }
+   
 }
+
 
 customElements.define("my-nav", MyNav);
