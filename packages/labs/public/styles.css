@@ -25,6 +25,7 @@ body.dark-mode {
 a {
     color: var(--color-link);
 }
+
 #heading-container {
     background-color: var(--color-background-header);
     color: var(--color-text-header);

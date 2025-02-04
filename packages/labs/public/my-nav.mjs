@@ -31,6 +31,9 @@ let markup = `
     display: none;
     flex-direction: column;
   }
+  #lower-items a {
+       color: var(--color-link);
+    }
    #lower-right-items {
         display: flex;
         flex-direction: row;
@@ -102,21 +105,29 @@ class MyNav extends HTMLElement {
         if (!this.shadowRoot.hasChildNodes()) {
             this.shadowRoot.appendChild(TEMPLATE.content.cloneNode(true));
             
-            // Get elements inside shadow DOM
+            const body = document.body;
             const toggleButton = this.shadowRoot.getElementById("toggle-btn");
             const lowerDiv = this.shadowRoot.getElementById("lower-items");
             const mainContainer = document.getElementById("main-container");
             const checkBox = this.shadowRoot.getElementById("check-box");
-            const body = document.body;
+          
+           
+            if (localStorage.getItem("darkMode") == "active"){
+              checkBox.checked = true;
+              body.classList.add("dark-mode");
+            }
+            
 
             checkBox.addEventListener("change", () => {
                 console.log("Changed");
                 if (checkBox.checked){
                     console.log("checked");
                     body.classList.add("dark-mode");
+                    localStorage.setItem("darkMode", "active");
                 }
                 else {
                     body.classList.remove("dark-mode");
+                    localStorage.setItem("darkMode", "inactive");
                 }
                 
             })
