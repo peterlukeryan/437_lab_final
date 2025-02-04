@@ -31,6 +31,11 @@ let markup = `
     display: none;
     flex-direction: column;
   }
+   #lower-right-items {
+        display: flex;
+        flex-direction: row;
+        gap: 1em;
+    }
 
   @media (min-width: 650px) {
     a {
@@ -53,17 +58,26 @@ let markup = `
       flex-direction: row;
       gap: 1em;
     }
+  
     button {
       display: none;
     }
+      label {
+        display: none;
+      }
   }
   </style>
 
   <nav id="main-nav">
     <div id="upper-items">
       <h1>Peter Ryan</h1>
-      
+      <div id="lower-right-items"> 
+      <label>
+    <input type="checkbox" autocomplete="off" id="check-box"/>
+    Dark mode
+</label>
       <button id="toggle-btn">Menu</button>
+    </div>
     </div>
     <div id="lower-items">
       ${navItems.map(item => 
@@ -92,6 +106,21 @@ class MyNav extends HTMLElement {
             const toggleButton = this.shadowRoot.getElementById("toggle-btn");
             const lowerDiv = this.shadowRoot.getElementById("lower-items");
             const mainContainer = document.getElementById("main-container");
+            const checkBox = this.shadowRoot.getElementById("check-box");
+            const body = document.body;
+
+            checkBox.addEventListener("change", () => {
+                console.log("Changed");
+                if (checkBox.checked){
+                    console.log("checked");
+                    body.classList.add("dark-mode");
+                }
+                else {
+                    body.classList.remove("dark-mode");
+                }
+                
+            })
+          
             toggleButton.addEventListener("click", () => {
                 console.log("clciked");
                 expanded = !expanded;
@@ -99,7 +128,8 @@ class MyNav extends HTMLElement {
                 console.log("style");
                 console.log(lowerDiv.style);
             });
-            mainContainer.addEventListener("click", (e) => {
+
+            mainContainer.addEventListener("click", () => {
                 if ( expanded){
                     expanded = !expanded;
                     lowerDiv.style.display = "none";

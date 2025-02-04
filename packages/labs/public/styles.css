@@ -3,6 +3,14 @@ body {
     color: var(--color-text);
     font-family: var(--font-main);
 }
+body.dark-mode {
+    --color-background-header: #101070;
+    --color-background: #00004d;
+    --color-text: #e8ffff;
+    --color-text-header: var(--color-text);
+    --color-link: #ffa576;
+    --color-border: var(--color-link);
+}
 
 #main-nav {
     display: flex;
