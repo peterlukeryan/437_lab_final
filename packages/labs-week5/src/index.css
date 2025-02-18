@@ -1,0 +1,11 @@
+@import "tailwindcss"; 
+
+th {
+    padding-left: 1em;
+    padding-right: 1em;
+
+}
+td {
+    padding-left: 1em;
+    padding-right: 1em;
+}

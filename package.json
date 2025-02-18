@@ -18,5 +18,9 @@
   "homepage": "https://github.com/peterlukeryan/437_lab_final#readme",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "nanoid": "^5.0.9",
+    "vite": "^6.1.0"
+  }
 }
