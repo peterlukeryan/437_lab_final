@@ -7,17 +7,17 @@ export function ImageDetails(props) {
     console.log(imageId);
     const { isLoading, fetchedImages } = useImageFetching(imageId, 500);
     if (isLoading) {
-        return <MainLayout>Loading...</MainLayout>;
+        return <div>Loading...</div>;
     }
     const imageData = fetchedImages[0];
     if (!imageData) {
-        return <MainLayout><h2>Image not found</h2></MainLayout>;
+        return <div><h2>Image not found</h2></div>;
     }
 
     return (
-        <MainLayout>
+        <div>
             <h2>{imageData.name}</h2>
             <img className="ImageDetails-img" src={imageData.src} alt={imageData.name} />
-        </MainLayout>
+        </div>
     )
 }
