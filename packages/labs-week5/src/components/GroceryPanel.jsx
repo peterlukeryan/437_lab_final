@@ -1,6 +1,6 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import { nanoid } from "nanoid";
-
+import { groceryFetcher } from "./groceryFetcher";
 import { Spinner } from "./Spinner";
 
 const MDN_URL = "https://mdn.github.io/learning-area/javascript/apis/fetching-data/can-store/products.json";
@@ -16,38 +16,64 @@ function delayMs(ms) {
 }
 
 export function GroceryPanel(props) {
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [error, setError] = React.useState(null);
-    const [groceryData, setGroceryData] = React.useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [groceryData, setGroceryData] = useState([]);
+    const [dropdownVal, setDropdownVal] = useState("MDN");
 
-    async function fetchData(url) {
-        setError(null);
-        setIsLoading(true);
-        try {
-            await delayMs(2000); // Wait before fetching
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const data = await response.json();
-            console.log(data[0].name);
-            setGroceryData(data); // Update state with fetched data
-        } catch (error) {
-            console.error("Error fetching data:", error);
-            setError(error);
-        } finally {
-            setIsLoading(false); // Ensure loading state is turned off
-        }
-    }
-    
-    function handleDropdownChanged(e){
-        if (e.target.value === ""){
+    useEffect( ()  =>  {
+        let isStale = false;
+
+        async function fetchData(name) {
             setGroceryData([]);
             setError(null);
+            setIsLoading(true);
+            try {
+                await delayMs(2000); // Wait before fetching
+                const data = await groceryFetcher.fetch(name)
+                
+               
+                console.log(data[0].name);
+                if (!isStale){
+                     setGroceryData(data); // Update state with fetched data
+
+                }
+                
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                if (!isStale){
+                    setError(error);
+
+                }
+            } finally {
+                if (!isStale){
+                     setIsLoading(false); // Ensure loading state is turned off
+
+                }
+            }
+        }
+        const firstRun = async () => {
+            const data =  await groceryFetcher.fetch(dropdownVal);
+            setGroceryData(data);
+        }
+        firstRun();
+
+        return () => {
+            isStale = true;
+        }
+
+    }, [dropdownVal])
+
+    
+    
+    function handleDropdownChanged(e){
+        setDropdownVal(e.target.value);
+        if (e.target.value === ""){
+            
 
         }
         else {
-            fetchData(e.target.value);
+            setDropdownVal(e.target.value);
         }
        
 
@@ -66,10 +92,11 @@ export function GroceryPanel(props) {
             <h1 className="text-xl font-bold">Groceries prices today</h1>
             <label className="mb-4 flex gap-4">
                 Get prices from:
-                <select className="border border-gray-300 p-1 rounded-sm disabled:opacity-50" disabled={isLoading} onChange={handleDropdownChanged}>
-                    <option value="">(None selected)</option>
-                    <option value={MDN_URL}>MDN</option>
-                    <option value="invalid">Who knows?</option>
+                <select className="border border-gray-300 p-1 rounded-sm disabled:opacity-50" disabled={isLoading} onChange={handleDropdownChanged} value={dropdownVal}>
+                <option value="MDN">MDN</option>
+<option value="Liquor store">Liquor store</option>
+<option value="Butcher">Butcher</option>
+<option value="whoknows">Who knows?</option>
                 </select>
                 {isLoading ? <Spinner /> : null}
                 {error ? <h1>Error getting request</h1> : null}
