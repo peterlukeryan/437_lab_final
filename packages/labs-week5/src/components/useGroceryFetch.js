@@ -6,7 +6,11 @@ import { groceryFetcher } from "./groceryFetcher";
 export const useGroceryFetch = (source) => {
     const [error, setError] = useState(null);
     const [groceryData, setGroceryData] = useState([]);
-  
+    const [isLoading, setIsLoading] = useState(false);
+
+    function delayMs(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     useEffect( ()  =>  {
         let isStale = false;
@@ -17,9 +21,7 @@ export const useGroceryFetch = (source) => {
             setIsLoading(true);
             try {
                 await delayMs(2000); // Wait before fetching
-                const data = await groceryFetcher.fetch(source)
-                
-               
+                const data = await groceryFetcher.fetch(name)
                 console.log(data[0].name);
                 if (!isStale){
                      setGroceryData(data); // Update state with fetched data
@@ -30,6 +32,7 @@ export const useGroceryFetch = (source) => {
                 console.error("Error fetching data:", error);
                 if (!isStale){
                     setError(error);
+                    setIsLoading(false);
 
                 }
             } finally {
@@ -39,11 +42,8 @@ export const useGroceryFetch = (source) => {
                 }
             }
         }
-        const firstRun = async () => {
-            const data =  await groceryFetcher.fetch(source);
-            setGroceryData(data);
-        }
-        firstRun();
+       
+        fetchData(source);
 
         return () => {
             isStale = true;
@@ -51,6 +51,6 @@ export const useGroceryFetch = (source) => {
 
     }, [source])
 
-    return {groceryData, error}
+    return {groceryData, isLoading, error}
 
 }

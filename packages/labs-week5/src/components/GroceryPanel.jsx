@@ -11,16 +11,14 @@ const MDN_URL = "https://mdn.github.io/learning-area/javascript/apis/fetching-da
  * @param {number} ms the number of milliseconds to delay
  * @returns {Promise<undefined>} a promise that resolves with the value of `undefined` after the specified delay
  */
-function delayMs(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 
 export function GroceryPanel(props) {
     
    
     const [dropdownVal, setDropdownVal] = useState("MDN");
 
-    const {groceryData, error} = useGroceryFetch(dropdownVal);
+    const {groceryData, isLoading, error} = useGroceryFetch(dropdownVal);
 
    
     function handleDropdownChanged(e){
@@ -55,6 +53,7 @@ export function GroceryPanel(props) {
 <option value="Butcher">Butcher</option>
 <option value="whoknows">Who knows?</option>
                 </select>
+                {isLoading && <Spinner></Spinner>}
                 {error ? <h1>Error getting request</h1> : null}
             </label>
 
