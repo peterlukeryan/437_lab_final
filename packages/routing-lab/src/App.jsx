@@ -7,6 +7,7 @@ import * as React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router'
 import { MainLayout } from "./MainLayout.jsx";
 import { useEffect, useState } from "react";
+import { useImageFetching } from "./images/useImageFetching.js";
 
 
 
@@ -54,22 +55,22 @@ const IMAGES = [
  * @param delay {number} the number of milliseconds fetching will take
  * @returns {{isLoading: boolean, fetchedImages: ImageData[]}} fetch state and data
  */
- function useImageFetching(imageId, delay=1000) {
-    const [isLoading, setIsLoading] = useState(true);
-    const [fetchedImages, setFetchedImages] = useState([]);
-    useEffect(() => {
-        setTimeout(() => {
-            if (imageId === "") {
-                setFetchedImages(IMAGES);
-            } else {
-                setFetchedImages(IMAGES.filter((image) => image.id === imageId));
-            }
-            setIsLoading(false);
-        }, delay);
-    }, [imageId]);
+//  function useImageFetching(imageId, delay=1000) {
+//     const [isLoading, setIsLoading] = useState(true);
+//     const [fetchedImages, setFetchedImages] = useState([]);
+//     useEffect(() => {
+//         setTimeout(() => {
+//             if (imageId === "") {
+//                 setFetchedImages(IMAGES);
+//             } else {
+//                 setFetchedImages(IMAGES.filter((image) => image.id === imageId));
+//             }
+//             setIsLoading(false);
+//         }, delay);
+//     }, [imageId]);
 
-    return { isLoading, fetchedImages };
-}
+//     return { isLoading, fetchedImages };
+// }
 
 const { isLoading, fetchedImages } = useImageFetching("");
     return (
