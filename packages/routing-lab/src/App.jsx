@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from 'react-router'
 import { MainLayout } from "./MainLayout.jsx";
 import { useEffect, useState } from "react";
 import { useImageFetching } from "./images/useImageFetching.js";
+import { ImageEditForm } from "./images/ImageEditForm.jsx";
 
 
 
@@ -77,7 +78,7 @@ const { isLoading, fetchedImages } = useImageFetching("");
         <BrowserRouter>
     <Routes>
         <Route element={<MainLayout />}>
-        <Route path="/" element={<Homepage name={userName}/>}/>
+        <Route path="/" element={<ImageEditForm/>}/>
         <Route path="images" element={<ImageGallery isLoading={isLoading} fetchedImages={fetchedImages}/>}/>
         <Route path="account" element={<AccountSettings toggle={updateUserName}/>}/>
         <Route path="/images/:imageId" element={<ImageDetails />}/>

@@ -11,7 +11,7 @@ export function useImageFetching(imageId, delay = 1000) {
         const fetchData = async () => {
             setIsLoading(true);
             try {
-                const url = imageId ? `/api/images?createdBy=${encodeURIComponent(imageId)}` : "/api/images";
+                const url = `/api/images/`
                 const response = await fetch(url, { signal: abortController.signal });
 
                 if (!response.ok) throw new Error(`Error: ${response.statusText}`);
@@ -19,7 +19,16 @@ export function useImageFetching(imageId, delay = 1000) {
                 const data = await response.json();
 
                 setTimeout(() => {
+                    if (imageId){
+                        for (let image of data){
+                            if (image._id == imageId){
+                                setFetchedImages(image);
+                            }
+                        }
+                    }
+                    else {
                     if (isMounted) setFetchedImages(data);
+                    }
                 }, delay);
             } catch (error) {
                 if (error.name !== "AbortError") {
