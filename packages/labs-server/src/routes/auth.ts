@@ -75,7 +75,7 @@ export function registerAuthRoutes(app: express.Application, mongoClient: MongoC
 
         await provider.registerUser(userName, passWord);
         
-       res.status(201).send();
+    res.status(201).send({token: await generateAuthToken(req.body.username)})
        return;
     });
 
