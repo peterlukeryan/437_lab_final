@@ -4,6 +4,7 @@ import path from "path";
 import { MongoClient } from "mongodb";
 import { ImageProvider } from "./ImageProvider";
 import { registerImageRoutes } from "./routes/images";
+import { registerAuthRoutes, verifyAuthToken } from "./routes/auth";
 
 
 dotenv.config(); // Read the .env file in the current working directory, and load values into process.env.
@@ -42,6 +43,8 @@ const setUpRoutes = async () => {
     });
 
     if (mongoClient){
+        app.use("/api/*", verifyAuthToken);
+        registerAuthRoutes(app, mongoClient);
         registerImageRoutes(app, mongoClient);
     }
     else {
