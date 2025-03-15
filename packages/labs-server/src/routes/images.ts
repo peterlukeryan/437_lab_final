@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { MongoClient } from "mongodb";
 import { ImageProvider } from "../ImageProvider";
+import { handleImageFileErrors, imageMiddlewareFactory } from "../imageUploadMiddleware"
 
 export function registerImageRoutes(app: express.Application, mongoClient: MongoClient) {
     app.get("/api/images", async (req: Request, res: Response) => {
@@ -13,11 +14,11 @@ export function registerImageRoutes(app: express.Application, mongoClient: Mongo
         let images = {}
         if (mongoClient){
             const provider = new ImageProvider(mongoClient);
-             images = await provider.getAllImagesDenormalized(userId)
+             images = await provider.getAllImages(userId)
         }
         else {
             const provider = new ImageProvider(mongoClient);
-            images = await provider.getAllImagesDenormalized();
+            images = await provider.getAllImages();
 
         }
         res.json(images);
@@ -50,5 +51,26 @@ app.patch("/api/images/:id",  async (req: Request, res: Response) => {
     res.sendStatus(204);
    
 });
+
+app.post(
+    "/api/images",
+    imageMiddlewareFactory.single("image"),
+    handleImageFileErrors,
+    async (req: Request, res: Response) => {
+        // Final handler function after the above two middleware functions finish running
+        if (!req.file || !req.body){
+            res.status(400).send({
+                error: "Bad request",
+                message: "Missing file or name"
+            });
+            return;
+        }
+        console.log(res.locals.token);
+        const provider = new ImageProvider(mongoClient);
+        const result = await provider.createImage(req.file.filename, `/uploads/${req.file.filename}`,req.body.name, 0, res.locals.token.username );
+        res.sendStatus(201);
+
+    }
+)
 
 }
