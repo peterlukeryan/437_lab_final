@@ -2,6 +2,8 @@ import { MainLayout } from "../MainLayout.jsx";
 import { useImageFetching } from "./useImageFetching.js";
 import "./ImageGallery.css";
 import { Link } from "react-router";
+import ImageUploadForm from "./ImageUploadForm.jsx";
+
 
 export function ImageGallery(props) {
   
@@ -19,6 +21,10 @@ export function ImageGallery(props) {
             {props.isLoading && "Loading..."}
             <div className="ImageGallery">
                 {imageElements}
+            </div>
+            <div>
+                <h3>Upload Image</h3>
+            <ImageUploadForm token={props.token}/>
             </div>
         </div>
     );

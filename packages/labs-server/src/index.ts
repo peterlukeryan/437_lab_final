@@ -11,7 +11,7 @@ dotenv.config(); // Read the .env file in the current working directory, and loa
 const setUpRoutes = async () => {
     const PORT = process.env.PORT || 3000;
     const staticDir = process.env.STATIC_DIR || "public";
-
+    const imageUploadDir = process.env.IMAGE_UPLOAD_DIR || "uploads";
     const { MONGO_USER, MONGO_PWD, MONGO_CLUSTER, DB_NAME } = process.env;
 
     const connectionStringRedacted = `mongodb+srv://${MONGO_USER}:<password>@${MONGO_CLUSTER}/${DB_NAME}`;
@@ -33,6 +33,7 @@ const setUpRoutes = async () => {
     const app = express();
 
     app.use(express.static(staticDir));
+    app.use("/uploads", express.static(imageUploadDir))
 
     const indexPath = path.resolve(__dirname, "../../routing-lab/dist/index.html");
     await setUpMongo();

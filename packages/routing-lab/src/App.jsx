@@ -39,7 +39,7 @@ const { isLoading, fetchedImages } = useImageFetching("", 1000, authToken);
   <Routes>
     <Route element={<MainLayout />}>
         <Route path="/" element={<ProtectedRoute authToken={authToken}><ImageEditForm/></ProtectedRoute>} />
-        <Route path="images" element={<ProtectedRoute authToken={authToken}><ImageGallery isLoading={isLoading} fetchedImages={fetchedImages}/></ProtectedRoute>} />
+        <Route path="images" element={<ProtectedRoute authToken={authToken}><ImageGallery isLoading={isLoading} fetchedImages={fetchedImages} token={authToken}/></ProtectedRoute>} />
         <Route path="account" element={<ProtectedRoute authToken={authToken}><AccountSettings toggle={updateUserName}/></ProtectedRoute>} />
         
       

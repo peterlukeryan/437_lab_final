@@ -22,55 +22,27 @@ export class ImageProvider {
     usersCollection = process.env.USERS_COLLECTION_NAME;
     constructor(private readonly mongoClient: MongoClient) {}
 
-    async getAllImagesDenormalized(author?: string): Promise<(ImageSchema & { author: UserSchema })[]> {
-        
-    
-        if (!this.imagesCollection || !this.usersCollection) {
-            throw new Error("Missing collection names from environment variables");
+    async getAllImages(author?: string): Promise<ImageSchema[]> {
+        if (!this.imagesCollection) {
+            throw new Error("Missing collection name from environment variables");
         }
     
         const collection = this.mongoClient.db().collection<ImageSchema>(this.imagesCollection);
-    
-        // Define the aggregation pipeline
-        const aggregationPipeline: any[] = [];
-    
-        // Conditionally add the $match stage if author is provided
+        
+        // Define the filter for the images collection
+        const filter: any = {};
+        
         if (author) {
-            aggregationPipeline.push({
-                $match: { author: author } // Filter by the provided author ID
-            });
+            filter.author = author;  // Filter by author if provided
         }
+        
+        // Fetch images without denormalization (no $lookup stage)
+        const images = await collection.find(filter).toArray();
     
-        aggregationPipeline.push(
-            {
-                $lookup: {
-                    from: this.usersCollection,  // Users collection
-                    localField: "author",   // The field in images referencing users
-                    foreignField: "_id",    // The matching field in users
-                    as: "authorDetails",    // Output field
-                },
-            },
-            {
-                $unwind: "$authorDetails" // Convert the array into an object
-            },
-            {
-                $project: {
-                    _id: 1,
-                    src: 1,
-                    name: 1,
-                    likes: 1,
-                    author: {
-                        _id: "$authorDetails._id",
-                        username: "$authorDetails.username",
-                        email: "$authorDetails.email",
-                    }, // Replace author with user details
-                },
-            }
-        );
-    
-        const images = await collection.aggregate(aggregationPipeline).toArray();
-        return images as (ImageSchema & { author: UserSchema })[];
+        return images;  // Return the images directly without author details
     }
+    
+   
 
     async updateImageName(imageId: string, newName: string): Promise<number> {
         
@@ -82,5 +54,35 @@ export class ImageProvider {
         return result.matchedCount;
         
     }
+    //_id can be the image file name (req.file.filename), as it's quite likely to be unique.
+// src should be the route at which the images are served. In this case we have it configured to be `/uploads/${filename}`.
+// name should be the image name that the user submitted in the form (look inside req.body).
+// likes should be 0.
+// author
+async createImage(_id: string, src: string, name: string, likes: number, author: string): Promise<number> {
+    const collection = this.mongoClient.db().collection<ImageSchema>(this.imagesCollection!);
+
+    // Create an image object based on the parameters
+    const newImage: ImageSchema = {
+        _id,   // Using shorthand syntax, _id: _id
+        src,
+        name,
+        likes,
+        author,
+    };
+
+    try {
+        // Insert the new image object into the collection
+        const result = await collection.insertOne(newImage);
+
+        // Return the inserted count (usually 1 for insertOne)
+        return 1;
+    } catch (error) {
+        // Handle any potential errors during the insertion
+        console.error('Error inserting image:', error);
+        return 0; // Return 0 if insertion fails
+    }
+}
+
     
 }
